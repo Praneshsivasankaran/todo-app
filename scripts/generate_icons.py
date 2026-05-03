@@ -93,6 +93,13 @@ def make_foreground(size):
     return img
 
 
+def make_adaptive_background(size):
+    """Adaptive-icon background: full-canvas gradient (no rounded corners — launcher masks it)."""
+    grad = make_gradient(size)
+    grad.putalpha(255)
+    return grad
+
+
 def main():
     # 1. Per-density launcher PNGs (full + round)
     for density, px in LAUNCHER_PX.items():
@@ -104,13 +111,15 @@ def main():
         rnd.save(os.path.join(out_dir, 'ic_launcher_round.png'))
         print(f'  wrote {density} launcher ({px}px)')
 
-    # 2. Per-density adaptive-icon foregrounds
+    # 2. Per-density adaptive-icon foregrounds + backgrounds
     for density, px in FOREGROUND_PX.items():
         out_dir = os.path.join(RES, f'mipmap-{density}')
         os.makedirs(out_dir, exist_ok=True)
         fg = make_foreground(px)
         fg.save(os.path.join(out_dir, 'ic_launcher_foreground.png'))
-        print(f'  wrote {density} foreground ({px}px)')
+        bg = make_adaptive_background(px)
+        bg.save(os.path.join(out_dir, 'ic_launcher_background.png'))
+        print(f'  wrote {density} foreground + background ({px}px)')
 
     # 3. 512x512 master (Play Store / general use)
     master = make_full_icon(512)
