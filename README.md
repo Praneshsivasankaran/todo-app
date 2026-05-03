@@ -1,102 +1,47 @@
-# Todo · Streak
+# todo · streak
 
-A minimal todo app with a GitHub-style activity heatmap, calendar, profile, and dark/light themes. Mobile-first design that also works as a centered card on desktop.
+A todo app I built because every other one I tried either nagged me about productivity or had a subscription. This one just lets you check things off and gives you a green-square heatmap like GitHub commits — turns out staring at an empty grid is a pretty good motivator.
 
-## Features
+Four tabs: today's list, a calendar to schedule stuff for later, a big streak heatmap with your stats, and a profile screen. Mobile-first (it's basically phone-shaped), but it also works fine on desktop as a centered card. Everything lives in `localStorage`, so no accounts, no servers, nothing leaves your browser.
 
-- **Today** — daily task list with checkboxes and a compact streak heatmap preview
-- **Calendar** — month grid with task indicators on each day; tap to view/add tasks for any date
-- **Streak** — full 6-month GitHub-style heatmap, current/longest streak, and lifetime stats
-- **Profile** — your stats and settings (theme toggle, edit username, log out)
-- **Floating + button** — primary action for adding tasks
-- **Persistent** — everything stored in `localStorage`; survives reloads
-- **Light & Dark themes** — clean light theme + true OLED-black dark theme
-
-## Tech
-
-- React 18
-- Vite
-- Tailwind CSS v3
-- lucide-react (icons)
-- Plus Jakarta Sans (Google Fonts, loaded at runtime)
-
-## Quick start
+## Running it
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start the dev server
 npm run dev
 ```
 
-The app runs at `http://localhost:5173`.
+Open `http://localhost:5173`. First load asks for a username (no password, just a name to greet you with).
 
-## Build for production
+To build for the web:
 
 ```bash
-npm run build
-npm run preview   # preview the production build locally
+npm run build      # output ends up in dist/
 ```
 
-The production build outputs to `dist/`.
+`dist/` is just a static folder — host it anywhere that serves files (Vercel, Netlify, GitHub Pages, your own server, whatever).
 
-## Deploy
+## Android
 
-The `dist/` folder is a static site — drop it on Vercel, Netlify, GitHub Pages, Cloudflare Pages, or any static host.
-
-**Vercel:** `vercel deploy` from the project root, or connect the repo on vercel.com.
-
-**Netlify:** `netlify deploy --prod --dir=dist`, or connect the repo with build command `npm run build` and publish directory `dist`.
-
-## Android (APK)
-
-The app is wrapped with [Capacitor](https://capacitorjs.com/) so it can ship as a native Android APK. The `android/` folder is a real Android Studio project and is committed to the repo; build artifacts under `android/build`, `android/.gradle`, etc. are gitignored.
+I wrapped it with [Capacitor](https://capacitorjs.com/) so it can run as a real Android app. The `android/` folder is a normal Android Studio project, committed to the repo.
 
 ```bash
-# 1. Build the web bundle and copy it into the Android project
 npm run build
 npx cap sync android
-
-# 2. Build a debug APK from the command line (requires JDK 17/21 + Android SDK)
-cd android
-./gradlew assembleDebug
-# → android/app/build/outputs/apk/debug/app-debug.apk
-
-# Or open the project in Android Studio and hit Run
-npx cap open android
+cd android && ./gradlew assembleDebug
 ```
 
-After editing React code, rerun `npm run build && npx cap sync android` to push the new bundle into the native shell.
+The APK ends up at `android/app/build/outputs/apk/debug/app-debug.apk`. Needs JDK 17 or 21 and the Android SDK installed. Or just run `npx cap open android` and hit Run in Android Studio.
 
-App identity (`appId`, `appName`, `webDir`) lives in `capacitor.config.json` at the project root.
+If you change React code, you have to rebuild and re-sync before the Android shell sees the new bundle — there's no hot reload across the WebView boundary.
 
-## Project structure
+## Stack
 
-```
-todo-app/
-├── index.html              # Vite root HTML
-├── package.json
-├── vite.config.js
-├── tailwind.config.js
-├── postcss.config.js
-└── src/
-    ├── main.jsx            # React entry point
-    ├── App.jsx             # All app logic + components
-    └── index.css           # Tailwind directives
-```
+React 18, Vite, Tailwind v3 (utilities only — colors are theme tokens, not hardcoded), lucide-react for icons, Plus Jakarta Sans for the font. The whole app fits in one `src/App.jsx` file on purpose, makes it easy to fork and tweak.
 
-## Storage keys
+## Notes
 
-Data lives under these `localStorage` keys (clear them to reset):
-
-- `todo-user-v3` — username + member-since timestamp
-- `todo-theme-v3` — `"light"` or `"dark"`
-- `todo-tasks-v3` — task list JSON
-
-## Customization
-
-- **Accent color** — edit the `LIGHT` and `DARK` palette objects at the top of `src/App.jsx`. The primary color flows through the gradient, FAB, streak hero, and active states.
-- **Heatmap colors** — `LIGHT.heatStops` and `DARK.heatStops` are 5-stop arrays (empty → most active). Currently uses GitHub's official contribution-graph palette.
-- **Heatmap thresholds** — see the `heatColor()` function. Currently: 0 / 1 / 2–3 / 4–5 / 6+ tasks per day.
-- **Heatmap range** — Today shows last 16 weeks (`.slice(-16)`); Streak shows 27 weeks (controlled by `cols` inside the `heatmap` `useMemo`).
+- All your data is in three `localStorage` keys (`todo-user-v3`, `todo-theme-v3`, `todo-tasks-v3`). Clear them in DevTools to reset.
+- Dark mode is true `#000000` because OLED screens deserve it.
+- Tabs use state, not a router. There's only one screen.
+- See `ARCHITECTURE.md` if you want the full tour of how things fit together.
