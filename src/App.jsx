@@ -344,7 +344,7 @@ export default function TodoApp() {
           ...cssVars,
         }}
       >
-        <div className="tdo-watermark">TODO</div>
+        <div className="tdo-watermark">DoNow</div>
 
         {/* phone card */}
         <div

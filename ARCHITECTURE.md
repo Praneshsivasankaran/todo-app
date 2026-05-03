@@ -4,7 +4,7 @@ Project context and conventions. Read this first before making changes.
 
 ## What this is
 
-A mobile-first React todo app with a GitHub-style activity heatmap as the core engagement mechanic. The app is shaped like a phone screen — full screen on mobile, centered ~420px-wide card on desktop with a soft background.
+DoNow — a mobile-first React todo app with a GitHub-style activity heatmap as the core engagement mechanic. The app is shaped like a phone screen — full screen on mobile, centered ~420px-wide card on desktop with a soft background.
 
 Four tabs at the bottom: **Today**, **Calendar**, **Streak**, **Profile**. First-time visitors hit a **Login screen** asking for a username (no password). Everything persists in `localStorage`.
 
