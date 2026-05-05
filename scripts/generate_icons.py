@@ -100,6 +100,31 @@ def make_adaptive_background(size):
     return grad
 
 
+ADAPTIVE_ICON_XML = """<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@mipmap/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+    <monochrome android:drawable="@drawable/ic_launcher_monochrome"/>
+</adaptive-icon>
+"""
+
+MONOCHROME_XML = """<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M 36,57 L 50,72 L 76,40"
+        android:strokeColor="#000000"
+        android:strokeWidth="10"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+</vector>
+"""
+
+
 def main():
     # 1. Per-density launcher PNGs (full + round)
     for density, px in LAUNCHER_PX.items():
@@ -125,6 +150,20 @@ def main():
     master = make_full_icon(512)
     master.save(os.path.join(ROOT, 'icon-512.png'))
     print('  wrote icon-512.png')
+
+    # 4. Adaptive icon XML, including Android 13+ themed icon support
+    anydpi_dir = os.path.join(RES, 'mipmap-anydpi-v26')
+    os.makedirs(anydpi_dir, exist_ok=True)
+    for name in ('ic_launcher.xml', 'ic_launcher_round.xml'):
+        with open(os.path.join(anydpi_dir, name), 'w', encoding='utf-8', newline='\n') as f:
+            f.write(ADAPTIVE_ICON_XML)
+        print(f'  wrote {name}')
+
+    drawable_dir = os.path.join(RES, 'drawable')
+    os.makedirs(drawable_dir, exist_ok=True)
+    with open(os.path.join(drawable_dir, 'ic_launcher_monochrome.xml'), 'w', encoding='utf-8', newline='\n') as f:
+        f.write(MONOCHROME_XML)
+    print('  wrote ic_launcher_monochrome.xml')
 
 
 if __name__ == '__main__':
