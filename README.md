@@ -10,7 +10,7 @@ The easiest way to try the Android build is from the GitHub Releases page:
 
 [Download the latest beta](https://github.com/Praneshsivasankaran/todo-app/releases/latest)
 
-For direct APK installs, download `DoNow-beta.apk` from the latest release, open it on your Android phone, and allow installation from unknown apps if Android asks. For a clean icon test, uninstall any older DoNow build before installing the new one.
+For direct APK installs, download `DoNow-beta.apk` from the latest release, open it on your Android phone, and allow installation from unknown apps if Android asks.
 
 ## Screenshots
 
